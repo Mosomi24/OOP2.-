@@ -1,0 +1,119 @@
+class Car {
+    private String model;
+    private String make;
+    private boolean isAvailable;
+
+    public Car(String model, String make) {
+        this.model = model;
+        this.make = make;
+        this.isAvailable = true;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public String getMake() {
+        return make;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
+    }
+
+    public void displayInfo() {
+        System.out.println("Car: " + make + " " + model + " | Available: " + isAvailable);
+    }
+}
+
+class Customer {
+    private String name;
+    private int id;
+
+    public Customer(String name, int id) {
+        this.name = name;
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+}
+
+class RentalAgency {
+    private Car[] cars;
+    private int carCount;
+
+    public RentalAgency(int size) {
+        cars = new Car[size];
+        carCount = 0;
+    }
+
+    public void addCar(Car car) {
+        if (carCount < cars.length) {
+            cars[carCount] = car;
+            carCount++;
+        } else {
+            System.out.println("No more space to add new cars.");
+        }
+    }
+
+    public void rentCar(Customer customer, String model) {
+        for (int i = 0; i < carCount; i++) {
+            if (cars[i].getModel().equals(model) && cars[i].isAvailable()) {
+                cars[i].setAvailable(false);
+                System.out.println(customer.getName() + " rented " + model);
+                return;
+            }
+        }
+        System.out.println("Car not available for rent.");
+    }
+
+    public void returnCar(String model) {
+        for (int i = 0; i < carCount; i++) {
+            if (cars[i].getModel().equals(model) && !cars[i].isAvailable()) {
+                cars[i].setAvailable(true);
+                System.out.println(model + " has been returned.");
+                return;
+            }
+        }
+        System.out.println("Car not found or already available.");
+    }
+
+    public void displayAvailableCars() {
+        System.out.println("Available cars:");
+        for (int i = 0; i < carCount; i++) {
+            if (cars[i].isAvailable()) {
+                cars[i].displayInfo();
+            }
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        RentalAgency agency = new RentalAgency(5);
+
+        Car car1 = new Car("Model S", "Tesla");
+        Car car2 = new Car("Civic", "Honda");
+
+        agency.addCar(car1);
+        agency.addCar(car2);
+
+        Customer customer1 = new Customer("John Doe", 101);
+
+        agency.displayAvailableCars();
+        agency.rentCar(customer1, "Model S");
+        agency.displayAvailableCars();
+        agency.returnCar("Model S");
+        agency.displayAvailableCars();
+    }
+}
